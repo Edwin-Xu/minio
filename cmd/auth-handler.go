@@ -160,7 +160,7 @@ func checkAdminRequestAuth(ctx context.Context, r *http.Request, action iampolic
 	if s3Err != ErrNone {
 		return cred, s3Err
 	}
-	if globalIAMSys.IsAllowed(iampolicy.Args{
+	if GlobalIAMSys.IsAllowed(iampolicy.Args{
 		AccountName:     cred.AccessKey,
 		Action:          iampolicy.Action(action),
 		ConditionValues: getConditionValues(r, "", cred.AccessKey, claims),
@@ -372,7 +372,7 @@ func checkRequestAuthTypeToAccessKey(ctx context.Context, r *http.Request, actio
 		return cred.AccessKey, owner, ErrAccessDenied
 	}
 
-	if globalIAMSys.IsAllowed(iampolicy.Args{
+	if GlobalIAMSys.IsAllowed(iampolicy.Args{
 		AccountName:     cred.AccessKey,
 		Action:          iampolicy.Action(action),
 		BucketName:      bucketName,
@@ -388,7 +388,7 @@ func checkRequestAuthTypeToAccessKey(ctx context.Context, r *http.Request, actio
 	if action == policy.ListBucketVersionsAction {
 		// In AWS S3 s3:ListBucket permission is same as s3:ListBucketVersions permission
 		// verify as a fallback.
-		if globalIAMSys.IsAllowed(iampolicy.Args{
+		if GlobalIAMSys.IsAllowed(iampolicy.Args{
 			AccountName:     cred.AccessKey,
 			Action:          iampolicy.ListBucketAction,
 			BucketName:      bucketName,
@@ -579,7 +579,7 @@ func isPutRetentionAllowed(bucketName, objectName string, retDays int, retDate t
 		conditions["object-lock-remaining-retention-days"] = []string{strconv.Itoa(retDays)}
 	}
 	if retMode == objectlock.RetGovernance && byPassSet {
-		byPassSet = globalIAMSys.IsAllowed(iampolicy.Args{
+		byPassSet = GlobalIAMSys.IsAllowed(iampolicy.Args{
 			AccountName:     cred.AccessKey,
 			Action:          iampolicy.BypassGovernanceRetentionAction,
 			BucketName:      bucketName,
@@ -589,7 +589,7 @@ func isPutRetentionAllowed(bucketName, objectName string, retDays int, retDate t
 			Claims:          claims,
 		})
 	}
-	if globalIAMSys.IsAllowed(iampolicy.Args{
+	if GlobalIAMSys.IsAllowed(iampolicy.Args{
 		AccountName:     cred.AccessKey,
 		Action:          iampolicy.PutObjectRetentionAction,
 		BucketName:      bucketName,
@@ -657,7 +657,7 @@ func isPutActionAllowed(ctx context.Context, atype authType, bucketName, objectN
 		return ErrAccessDenied
 	}
 
-	if globalIAMSys.IsAllowed(iampolicy.Args{
+	if GlobalIAMSys.IsAllowed(iampolicy.Args{
 		AccountName:     cred.AccessKey,
 		Action:          action,
 		BucketName:      bucketName,

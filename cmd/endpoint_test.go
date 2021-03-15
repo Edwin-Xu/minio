@@ -130,7 +130,7 @@ func TestNewEndpoints(t *testing.T) {
 
 func TestCreateEndpoints(t *testing.T) {
 	// Filter ipList by IPs those do not start with '127.'.
-	nonLoopBackIPs := localIP4.FuncMatch(func(ip string, matchString string) bool {
+	nonLoopBackIPs := LocalIP4.FuncMatch(func(ip string, matchString string) bool {
 		return !net.ParseIP(ip).IsLoopback()
 	}, "")
 	if len(nonLoopBackIPs) == 0 {
@@ -334,14 +334,14 @@ func TestCreateEndpoints(t *testing.T) {
 // So it means that if you have say localhost:9000 and localhost:9001 as endpointArgs then localhost:9001
 // is considered a remote service from localhost:9000 perspective.
 func TestGetLocalPeer(t *testing.T) {
-	tempGlobalMinioAddr := globalMinioAddr
-	tempGlobalMinioPort := globalMinioPort
+	tempGlobalMinioAddr := GlobalMinioAddr
+	tempGlobalMinioPort := GlobalMinioPort
 	defer func() {
-		globalMinioAddr = tempGlobalMinioAddr
-		globalMinioPort = tempGlobalMinioPort
+		GlobalMinioAddr = tempGlobalMinioAddr
+		GlobalMinioPort = tempGlobalMinioPort
 	}()
-	globalMinioAddr = ":9000"
-	globalMinioPort = "9000"
+	GlobalMinioAddr = ":9000"
+	GlobalMinioPort = "9000"
 
 	testCases := []struct {
 		endpointArgs   []string
@@ -371,11 +371,11 @@ func TestGetLocalPeer(t *testing.T) {
 }
 
 func TestGetRemotePeers(t *testing.T) {
-	tempGlobalMinioPort := globalMinioPort
+	tempGlobalMinioPort := GlobalMinioPort
 	defer func() {
-		globalMinioPort = tempGlobalMinioPort
+		GlobalMinioPort = tempGlobalMinioPort
 	}()
-	globalMinioPort = "9000"
+	GlobalMinioPort = "9000"
 
 	testCases := []struct {
 		endpointArgs   []string
@@ -407,11 +407,11 @@ func TestGetRemotePeers(t *testing.T) {
 }
 
 func TestUpdateDomainIPs(t *testing.T) {
-	tempGlobalMinioPort := globalMinioPort
+	tempGlobalMinioPort := GlobalMinioPort
 	defer func() {
-		globalMinioPort = tempGlobalMinioPort
+		GlobalMinioPort = tempGlobalMinioPort
 	}()
-	globalMinioPort = "9000"
+	GlobalMinioPort = "9000"
 
 	tempGlobalDomainIPs := globalDomainIPs
 	defer func() {
